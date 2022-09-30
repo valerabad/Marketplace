@@ -13,5 +13,15 @@ namespace Marketplace.Data
         public DbSet<Item> Items { get; set; }
         
         public DbSet<Sale> Sales { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            
+            builder.Entity<Sale>()
+                .Property(b => b.Price).HasColumnType("money");
+            
+            builder.Seed();
+        }
     }
 }
