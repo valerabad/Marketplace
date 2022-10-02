@@ -26,9 +26,9 @@ public class ItemController : Controller
     }
     
     [HttpGet] 
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        var result = repo.GetAll().ToList();
+        var result = await repo.GetAll();
 
         var itemsDto = mapper.Map<List<ItemDTO>>(result);
         

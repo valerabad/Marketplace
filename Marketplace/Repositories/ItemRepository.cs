@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Marketplace.Data;
 using Marketplace.Models.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +16,12 @@ public class ItemRepository : IItemRepository
       {
             this.marketDbContext = marketDbContext;
       } 
-      public IQueryable<Item> GetAll()
+      public async Task<IEnumerable>GetAll()
       {
-            return marketDbContext.Items
-                  //.Include(x=>x.Sales)
-                  .Where(x=>x.Id < 50);
+            return await marketDbContext.Items
+                  .Include(x=>x.Sales)
+                  .ToListAsync();
+            //.Where(x=>x.Id < 50).ToListAsync();
       }
 
       public Item GetById(int id)
