@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Marketplace.Models.DTO;
 using Marketplace.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -13,24 +16,32 @@ namespace Marketplace.Controllers;
 [Route("api/[controller]/[action]")]
 public class ItemController : Controller
 {
-    private IItemRepository repo;
-    public ItemController(IItemRepository repo)
+    private readonly IItemRepository repo;
+    private readonly IMapper mapper;
+    
+    public ItemController(IItemRepository repo, IMapper mapper)
     {
         this.repo = repo;
+        this.mapper = mapper;
     }
     
     [HttpGet] 
     public IActionResult GetAll()
     {
         var result = repo.GetAll().ToList();
+
+        var itemsDto = mapper.Map<List<ItemDTO>>(result);
         
-        return Ok(result);
+        return Ok(itemsDto);
     }
     
     [HttpGet] 
     public IActionResult GetById([FromQuery] int id)
     {
         var result = repo.GetById(id);
-        return Ok(result);
+        
+        var itemsDto = mapper.Map<ItemDTO>(result);
+        
+        return Ok(itemsDto);
     }
 }

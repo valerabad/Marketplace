@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Marketplace.Common;
+using Marketplace.Profiles;
 using Marketplace.Repositories;
 
 namespace Marketplace
@@ -36,6 +37,8 @@ namespace Marketplace
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Marketplace", Version = "v1" });
             });
 
+            services.AddAutoMapper(typeof(MappingProfile));
+            
             services.AddVersioning();
             
             services.AddScoped<IItemRepository, ItemRepository>();
@@ -59,8 +62,6 @@ namespace Marketplace
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            //app.); //UseApiVersioning();
 
             app.UseAuthorization();
 
