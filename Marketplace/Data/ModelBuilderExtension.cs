@@ -14,7 +14,7 @@ public static class ModelBuilderExtension
         var fakeItems = ItemGenerator.Generate(50000).ToList();
         builder.Entity<Item>().HasData(fakeItems);
 
-        var fakeSales = SaleGenerator.Generate(100000);
+        var fakeSales = SaleGenerator.Generate(10000);
         builder.Entity<Sale>().HasData(fakeSales);
 
     }
