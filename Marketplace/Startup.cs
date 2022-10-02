@@ -13,6 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Marketplace.Common;
+using Marketplace.Repositories;
 
 namespace Marketplace
 {
@@ -33,6 +35,11 @@ namespace Marketplace
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Marketplace", Version = "v1" });
             });
+
+            services.AddVersioning();
+            
+            services.AddScoped<IItemRepository, ItemRepository>();
+            
             services.AddDbContext<MarketDbContext>(option =>
             {
                 option.UseSqlServer(this.Configuration.GetConnectionString("Marketplace"));
@@ -52,6 +59,8 @@ namespace Marketplace
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            //app.); //UseApiVersioning();
 
             app.UseAuthorization();
 
