@@ -11,10 +11,10 @@ public static class ModelBuilderExtension
 {
     public static void Seed(this ModelBuilder builder)
     {
-        var fakeItems = ItemGenerator.Generate(50000).ToList();
+        var fakeItems = ItemGenerator.Generate(50).ToList();
         builder.Entity<Item>().HasData(fakeItems);
-
-        var fakeSales = SaleGenerator.Generate(10000);
+        
+        var fakeSales = SaleGenerator.Generate(20);
         builder.Entity<Sale>().HasData(fakeSales);
 
     }
