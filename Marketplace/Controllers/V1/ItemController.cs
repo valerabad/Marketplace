@@ -8,12 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 
-namespace Marketplace.Controllers;
+namespace Marketplace.Controllers.V1;
 
 [ApiController]
-//[ApiVersion("1.0")]
-//[Route("api/v{version:apiVersion}/[controller]/[action]")]
-[Route("api/[controller]/[action]")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]/[action]")]
 public class ItemController : Controller
 {
     private readonly IItemRepository repo;
