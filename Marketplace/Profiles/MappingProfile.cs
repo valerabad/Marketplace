@@ -9,7 +9,7 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<Item, ItemDTO>().ReverseMap();
-        
-        CreateMap<Sale, SaleDTO>().ReverseMap();
+
+        CreateMap<AuctionDto, AuctionViewDto>();
     }
 }

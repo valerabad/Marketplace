@@ -38,10 +38,10 @@ public class AuctionsController : Controller
     [HttpGet]
     public async Task<IActionResult> GetByFilter([FromQuery] AuctionFilter filter)
     {
-        var sales = await saleRepository.GetByFilter(filter);
-    
-        var auctionDTO = sales.Select(item => mapper.Map<AuctionDto>(item));
+        var auctions = await saleRepository.GetByFilter(filter);
 
-        return Ok(auctionDTO);
+        var auctionViewDto = auctions.Select(item => mapper.Map<AuctionViewDto>(item));
+
+        return Ok(auctionViewDto);
     }
 }
