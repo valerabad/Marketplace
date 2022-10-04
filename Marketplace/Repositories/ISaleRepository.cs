@@ -7,5 +7,6 @@ namespace Marketplace.Repositories;
 
 public interface ISaleRepository
 {
-    Task<IQueryable<AuctionDTO>> GetByFilter(AuctionFilter filter);
+    Task<IQueryable<AuctionDto>> GetByFilter(AuctionFilter filter);
+    Task<AuctionDto> GetById(int id);
 }
