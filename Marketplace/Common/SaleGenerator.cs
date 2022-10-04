@@ -19,8 +19,8 @@ public static class SaleGenerator
         .RuleFor(x => x.Price, f => f.Finance.Amount())
         .RuleFor(x => x.Status, f => f.Random.Enum<MarketStatus>())
         .RuleFor(x => x.ItemId, f => f.Random.Int(min:51, max:61))
-        .RuleFor(x => x.CreatedDt,  f => f.Date.Between(DateTime.MinValue, DateTime.MaxValue))
-        .RuleFor(x => x.FinishedDt, f => f.Date.Between(DateTime.MinValue, DateTime.MaxValue))
+        .RuleFor(x => x.CreatedDt,  f => f.Date.Recent())
+        .RuleFor(x => x.FinishedDt, f => f.Date.Recent())
         .RuleFor(x => x.Buyer, f => f.Name.FullName())
         .RuleFor(x => x.Seller, f => f.Company.CompanyName());
     
