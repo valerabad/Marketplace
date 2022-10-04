@@ -68,19 +68,20 @@ public class SalesRepository : ISaleRepository
                     sales = sales.OrderByDescending(x => x.Price).ToList();
                     break;
                 default:
+                    sales = sales.OrderBy(x => x.Price).ToList();
                     break;
             }
         }
         
         if (filter?.SortKey == "CreatedDt")
         {
-            sales = sales.OrderByDescending(x => x.CreatedDt).ToList();
             switch (filter.SortOrder)
             {
                 case SortOrder.Desc:
                     sales = sales.OrderByDescending(x => x.CreatedDt).ToList();
                     break;
                 default:
+                    sales = sales.OrderBy(x => x.CreatedDt).ToList();
                     break;
             }
         }

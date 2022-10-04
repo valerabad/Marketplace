@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 
-namespace Marketplace.Controllers.V1;
+namespace Marketplace.Controllers.V2;
 
 [ApiController]
 [ApiVersion("1.0")]
