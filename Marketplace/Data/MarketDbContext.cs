@@ -1,3 +1,4 @@
+using Marketplace.Data.Configuration;
 using Marketplace.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,8 @@ namespace Marketplace.Data
             
             builder.Entity<Sale>()
                 .Property(b => b.Price).HasColumnType("money");
+            
+            builder.ApplyConfiguration(new ItemConfiguration());
             
             builder.Seed();
         }
