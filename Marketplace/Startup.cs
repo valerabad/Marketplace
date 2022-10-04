@@ -12,6 +12,7 @@ using Marketplace.Profiles;
 using Marketplace.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Serilog;
 
 namespace Marketplace
 {
@@ -32,6 +33,8 @@ namespace Marketplace
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddAutoMapper(typeof(MappingProfile));
+            
+            services.AddSingleton(Log.Logger);
             
             services.AddApiVersioning(setup =>
             {
@@ -79,12 +82,6 @@ namespace Marketplace
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            // app.Run(async (context) =>
-            // {
-            //     var test = ItemGenerator.Generate(50);
-            //     await context.Response.WriteAsync("test");
-            // });
 
             app.UseAuthorization();
 
