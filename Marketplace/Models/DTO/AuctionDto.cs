@@ -3,8 +3,9 @@ using Marketplace.Common;
 
 namespace Marketplace.Models.DTO;
 
-public class AuctionDTO
+public class AuctionDto
 {
+    public int Id { get; set; }
     public string Name { get; set; }
     
     public MarketStatus Status { get; set; }

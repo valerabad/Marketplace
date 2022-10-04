@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Marketplace.Models;
@@ -12,12 +13,12 @@ namespace Marketplace.Controllers.V1;
 [Route("api/v{version:apiVersion}/[controller]")]
 public class AuctionsController : Controller
 {
-    private readonly IItemRepository itemRepository;
+    private readonly ISaleRepository saleRepository;
     private readonly IMapper mapper;
     
-    public AuctionsController(IItemRepository itemRepository, IMapper mapper)
+    public AuctionsController(ISaleRepository saleRepository, IMapper mapper)
     {
-        this.itemRepository = itemRepository;
+        this.saleRepository = saleRepository;
         this.mapper = mapper;
     }
 
@@ -25,20 +26,22 @@ public class AuctionsController : Controller
     [HttpGet("{id}")]
     public async Task<IActionResult> Index(int id)
     {
-        var item = await itemRepository.GetById(id);
-
-        var result = mapper.Map<ItemDTO>(item);
+        var auction = await saleRepository.GetById(id);
         
-        return Ok(result);
+        if (auction is null)
+        {
+            NotFound();
+        }
+        return Ok(auction);
     }
     
-    // [HttpGet("{id}")]
-    // public async Task<IActionResult> GetByFilter([FromQuery] AuctionFilter filter)
-    // {
-    //     var item = await itemRepository.GetByFilter(filter);
-    //
-    //     var result = mapper.Map<ItemDTO>(item);
-    //     
-    //     return Ok(result);
-    // }
+    [HttpGet]
+    public async Task<IActionResult> GetByFilter([FromQuery] AuctionFilter filter)
+    {
+        var sales = await saleRepository.GetByFilter(filter);
+    
+        var auctionDTO = sales.Select(item => mapper.Map<AuctionDto>(item));
+
+        return Ok(auctionDTO);
+    }
 }

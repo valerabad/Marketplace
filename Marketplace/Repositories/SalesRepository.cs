@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Marketplace.Common;
 using Marketplace.Data;
 using Marketplace.Models;
-using Marketplace.Models.Domain;
 using Marketplace.Models.DTO;
 using Marketplace.Paging;
 using Microsoft.EntityFrameworkCore;
@@ -26,18 +25,34 @@ public class SalesRepository : ISaleRepository
         return result;
     }
 
-    public Task<Item> GetById(int id)
+    public async Task<AuctionDto> GetById(int id)
     {
-        throw new System.NotImplementedException();
+        var auction = await marketDbContext.Sales.Join(marketDbContext.Items,
+            s => s.ItemId,
+            i => i.Id,
+            (i, s) => new AuctionDto()
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Price = i.Price,
+                Status = i.Status,
+                Seller = i.Seller,
+                CreatedDt = i.CreatedDt
+            }).ToListAsync();
+
+        var result = auction.FirstOrDefault(x => x.Id == id);
+
+        return result;
     }
 
-    public async Task<IQueryable<AuctionDTO>> GetByFilter(AuctionFilter filter)
+    public async Task<IQueryable<AuctionDto>> GetByFilter(AuctionFilter filter)
     {
         var sales = marketDbContext.Sales.Join(marketDbContext.Items,
             s => s.ItemId,
             i => i.Id,
-            (i, s) => new AuctionDTO()
+            (i, s) => new AuctionDto()
             {
+                Id = s.Id,
                 Name = s.Name,
                 Price = i.Price,
                 Status = i.Status,
@@ -88,7 +103,7 @@ public class SalesRepository : ISaleRepository
         // Paging
         int pageSize = filter.Limit;
         int pageNumber = filter.From;
-        sales = PaginatedList<AuctionDTO>.Create(sales.AsQueryable(), pageNumber, pageSize);
+        sales = PaginatedList<AuctionDto>.Create(sales.AsQueryable(), pageNumber, pageSize);
 
         return sales.AsQueryable();
     }
