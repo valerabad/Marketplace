@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Marketplace.Common;
 using Marketplace.Profiles;
 using Marketplace.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 namespace Marketplace
@@ -81,7 +82,7 @@ namespace Marketplace
 
             // app.Run(async (context) =>
             // {
-            //     var test = SaleGenerator.Generate(50);
+            //     var test = ItemGenerator.Generate(50);
             //     await context.Response.WriteAsync("test");
             // });
 

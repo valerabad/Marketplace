@@ -6,7 +6,7 @@ namespace Marketplace.Common
     [JsonConverter(typeof(StringEnumConverter))]
     public enum MarketStatus
     {
-        None = 0, 
+        None = 1, 
         Canceled, 
         Finished, 
         Active,

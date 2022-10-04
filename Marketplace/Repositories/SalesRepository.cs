@@ -50,14 +50,14 @@ public class SalesRepository : ISaleRepository
         var sales = marketDbContext.Sales.Join(marketDbContext.Items,
             s => s.ItemId,
             i => i.Id,
-            (i, s) => new AuctionDto()
+            (s, i) => new AuctionDto()
             {
                 Id = s.Id,
-                Name = s.Name,
-                Price = i.Price,
-                Status = i.Status,
-                Seller = i.Seller,
-                CreatedDt = i.CreatedDt
+                Name = i.Name,
+                Price = s.Price,
+                Status = s.Status,
+                Seller = s.Seller,
+                CreatedDt = s.CreatedDt
             }).ToList();
         
         if (!string.IsNullOrEmpty(filter.SortKey) && filter.SortKey == "Price")
@@ -87,23 +87,24 @@ public class SalesRepository : ISaleRepository
 
         if (!string.IsNullOrEmpty(filter.SearchString))
         {
-            // change to name
             sales = sales.Where(n => 
                 n.Name.Contains(filter.SearchString, StringComparison.CurrentCultureIgnoreCase))
                 .ToList();
         }
 
-        sales = sales.Where(x => x.Status == filter.Status).ToList();
+        if (filter.Status != 0)
+        {
+            sales = sales.Where(x => x.Status == filter.Status).ToList();
+        }
+        
 
         if (!string.IsNullOrEmpty(filter.Seller))
         {
             sales = sales.Where(x => x.Seller == filter.Seller).ToList();
         }
-        
+
         // Paging
-        int pageSize = filter.Limit;
-        int pageNumber = filter.From;
-        sales = PaginatedList<AuctionDto>.Create(sales.AsQueryable(), pageNumber, pageSize);
+        sales = PaginatedList<AuctionDto>.Create(sales.AsQueryable(), filter.From, filter.Limit);
 
         return sales.AsQueryable();
     }
