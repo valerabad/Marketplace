@@ -15,5 +15,5 @@ public class AuctionDto
     public string Seller { get; set; }
 
     public DateTime CreatedDt { get; set; }
-
+    
 }
