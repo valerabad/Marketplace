@@ -27,18 +27,7 @@ public class SalesRepository : ISaleRepository
 
     public async Task<AuctionDto> GetById(int id)
     {
-        var auction = await marketDbContext.Sales.Join(marketDbContext.Items,
-            s => s.ItemId,
-            i => i.Id,
-            (i, s) => new AuctionDto()
-            {
-                Id = s.Id,
-                Name = s.Name,
-                Price = i.Price,
-                Status = i.Status,
-                Seller = i.Seller,
-                CreatedDt = i.CreatedDt
-            }).ToListAsync();
+        var auction = await GetAllQuery().ToListAsync();
 
         var result = auction.FirstOrDefault(x => x.Id == id);
 
@@ -47,7 +36,63 @@ public class SalesRepository : ISaleRepository
 
     public async Task<IQueryable<AuctionDto>> GetByFilter(AuctionFilter filter)
     {
-        var sales = marketDbContext.Sales.Join(marketDbContext.Items,
+        var sales = GetAllQuery();
+
+        if (!string.IsNullOrEmpty(filter.SortKey) && filter.SortKey == "Price")
+        {
+            switch (filter.SortOrder)
+            {
+                case SortOrder.Desc:
+                    sales = sales.OrderByDescending(x => x.Price);
+                    break;
+                default:
+                    sales = sales.OrderBy(x => x.Price);
+                    break;
+            }
+        }   
+        
+        if (filter?.SortKey == "CreatedDt")
+        {
+            switch (filter.SortOrder)
+            {
+                case SortOrder.Desc:
+                    sales = sales.OrderByDescending(x => x.CreatedDt);
+                    break;
+                default:
+                    sales = sales.OrderBy(x => x.CreatedDt);
+                    break;
+            }
+        }
+
+        if (!string.IsNullOrEmpty(filter.SearchString))
+        {
+            sales = sales.Where(n => 
+                n.Name.Contains(filter.SearchString, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        if (filter.Status != 0)
+        {
+            sales = sales.Where(x => x.Status == filter.Status);
+        }
+        
+
+        if (!string.IsNullOrEmpty(filter.Seller))
+        {
+            sales = sales.Where(x => x.Seller == filter.Seller);
+        }
+
+        // Paging
+        var result = PaginatedList<AuctionDto>.Create(
+            sales, 
+            filter.From,
+            filter.Limit);
+
+        return result.AsQueryable();
+    }
+    
+    private IQueryable<AuctionDto> GetAllQuery()
+    {
+        return marketDbContext.Sales.Join(marketDbContext.Items,
             s => s.ItemId,
             i => i.Id,
             (s, i) => new AuctionDto()
@@ -58,55 +103,6 @@ public class SalesRepository : ISaleRepository
                 Status = s.Status,
                 Seller = s.Seller,
                 CreatedDt = s.CreatedDt
-            }).ToList();
-        
-        if (!string.IsNullOrEmpty(filter.SortKey) && filter.SortKey == "Price")
-        {
-            switch (filter.SortOrder)
-            {
-                case SortOrder.Desc:
-                    sales = sales.OrderByDescending(x => x.Price).ToList();
-                    break;
-                default:
-                    sales = sales.OrderBy(x => x.Price).ToList();
-                    break;
-            }
-        }
-        
-        if (filter?.SortKey == "CreatedDt")
-        {
-            switch (filter.SortOrder)
-            {
-                case SortOrder.Desc:
-                    sales = sales.OrderByDescending(x => x.CreatedDt).ToList();
-                    break;
-                default:
-                    sales = sales.OrderBy(x => x.CreatedDt).ToList();
-                    break;
-            }
-        }
-
-        if (!string.IsNullOrEmpty(filter.SearchString))
-        {
-            sales = sales.Where(n => 
-                n.Name.Contains(filter.SearchString, StringComparison.CurrentCultureIgnoreCase))
-                .ToList();
-        }
-
-        if (filter.Status != 0)
-        {
-            sales = sales.Where(x => x.Status == filter.Status).ToList();
-        }
-        
-
-        if (!string.IsNullOrEmpty(filter.Seller))
-        {
-            sales = sales.Where(x => x.Seller == filter.Seller).ToList();
-        }
-
-        // Paging
-        sales = PaginatedList<AuctionDto>.Create(sales.AsQueryable(), filter.From, filter.Limit);
-
-        return sales.AsQueryable();
+            });
     }
 }

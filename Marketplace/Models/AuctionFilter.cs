@@ -12,6 +12,6 @@ public class AuctionFilter : OffsetFilter
     public string SearchString { get; set; }
     
     public string SortKey { get; set; }
-    
-    public SortOrder SortOrder { get; set; }
+
+    public SortOrder SortOrder { get; set; } = SortOrder.Asc;
 }
