@@ -75,16 +75,17 @@ public class SalesRepository : ISaleRepository
             sales = sales.Where(x => x.Seller == filter.Seller);
         }
 
+        // TODO Need optimization
         if (!string.IsNullOrEmpty(filter.SearchString))
         {
-            var serchByNameResult = sales.AsEnumerable().Where(n => 
+            var searchByNameResult = sales.AsEnumerable().Where(n => 
                 n.Name.Contains(filter.SearchString, StringComparison.CurrentCultureIgnoreCase)).ToList();
-            sales = serchByNameResult.AsQueryable();
+            sales = searchByNameResult.AsQueryable();
         }
         
         // Paging
         var result = PaginatedList<AuctionDto>.Create(
-            sales,
+            sales, 
             filter.From,
             filter.Limit);
 
