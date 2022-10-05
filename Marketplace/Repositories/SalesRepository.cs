@@ -64,12 +64,6 @@ public class SalesRepository : ISaleRepository
             }
         }
 
-        if (!string.IsNullOrEmpty(filter.SearchString))
-        {
-            sales = sales.Where(n => 
-                n.Name.Contains(filter.SearchString, StringComparison.CurrentCultureIgnoreCase));
-        }
-
         if (filter.Status != 0)
         {
             sales = sales.Where(x => x.Status == filter.Status);
@@ -81,9 +75,16 @@ public class SalesRepository : ISaleRepository
             sales = sales.Where(x => x.Seller == filter.Seller);
         }
 
+        if (!string.IsNullOrEmpty(filter.SearchString))
+        {
+            var serchByNameResult = sales.AsEnumerable().Where(n => 
+                n.Name.Contains(filter.SearchString, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            sales = serchByNameResult.AsQueryable();
+        }
+        
         // Paging
         var result = PaginatedList<AuctionDto>.Create(
-            sales, 
+            sales,
             filter.From,
             filter.Limit);
 
