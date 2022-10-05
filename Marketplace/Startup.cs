@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Marketplace.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,7 +10,9 @@ using Microsoft.Extensions.Hosting;
 using Marketplace.Common;
 using Marketplace.Profiles;
 using Marketplace.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Serilog;
 
 namespace Marketplace
 {
@@ -25,9 +28,13 @@ namespace Marketplace
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().
+                AddJsonOptions(options =>
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddAutoMapper(typeof(MappingProfile));
+            
+            services.AddSingleton(Log.Logger);
             
             services.AddApiVersioning(setup =>
             {
@@ -46,6 +53,7 @@ namespace Marketplace
             services.ConfigureOptions<ConfigureSwaggerOptions>();
             
             services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<ISaleRepository, SalesRepository>();
             
             services.AddDbContext<MarketDbContext>(option =>
             {

@@ -18,8 +18,8 @@ namespace Marketplace.Models.Domain
         
         public string Buyer { get; set; }
         
-        public string CreatedDt { get; set; }
+        public DateTime CreatedDt { get; set; }
         
-        public string FinishedDt { get; set; }
+        public DateTime FinishedDt { get; set; }
     }
 }
