@@ -49,7 +49,7 @@ public class SalesRepository : ISaleRepository
                     sales = sales.OrderBy(x => x.Price);
                     break;
             }
-        }   
+        }
         
         if (filter?.SortKey == "CreatedDt")
         {
