@@ -5,6 +5,7 @@ using AutoMapper;
 using Marketplace.Models;
 using Marketplace.Models.DTO;
 using Marketplace.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -31,6 +32,9 @@ public class AuctionsController : Controller
 
     [MapToApiVersion("1.0")]
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AuctionDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Index(int id)
     {
         _logger.LogDebug("Find element by id has been started");
@@ -48,6 +52,9 @@ public class AuctionsController : Controller
     }
     
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IQueryable<AuctionDto>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetByFilter([FromQuery] AuctionFilter filter)
     {
         try
@@ -66,6 +73,5 @@ public class AuctionsController : Controller
             _logger.LogError($"Exception occured: {ex.Message}");
             return BadRequest();
         }
-       
     }
 }
